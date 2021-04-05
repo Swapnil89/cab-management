@@ -1,6 +1,7 @@
 package com.swapnil.service;
 
 import com.swapnil.dao.ITrips;
+import com.swapnil.exception.TripNotExists;
 import com.swapnil.model.City;
 import com.swapnil.model.Trip;
 import lombok.AllArgsConstructor;
@@ -35,4 +36,9 @@ public class TripService {
     public City getCityWithHighestDemandInInterval(@NonNull LocalDateTime fromTime,@NonNull LocalDateTime toTime){
         return trips.getCityWithDemandInInterval(fromTime,toTime).entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey();
     }
+
+    public void endTrip(@NonNull String tripId) throws TripNotExists {
+        trips.endTrip(tripId);
+    }
+
 }
