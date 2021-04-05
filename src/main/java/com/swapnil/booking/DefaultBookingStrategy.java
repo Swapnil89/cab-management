@@ -13,6 +13,6 @@ public class DefaultBookingStrategy implements IBookingStrategy {
     public Cab assignCab(@NonNull List<Cab> candidateCabs,@NonNull City fromLocation,@NonNull City toLocation) throws CabNotFoundException {
         if(candidateCabs.size()==0)
             throw new CabNotFoundException();
-        return candidateCabs.stream().max((o1,o2)->(o2.getLastTripFinishedAt().isBefore(o1.getLastTripFinishedAt())==true ? -1 : 1)).get();
+        return candidateCabs.stream().min((o1,o2)->(o1.getLastTripFinishedAt().isBefore(o2.getLastTripFinishedAt())==true ? -1 : 1)).get();
     }
 }

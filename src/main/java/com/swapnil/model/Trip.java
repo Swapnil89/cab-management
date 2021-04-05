@@ -31,6 +31,9 @@ public class Trip {
     }
 
     public void endTrip(){
+        this.cab.setStatus(Cab.Status.IDLE);
+        this.cab.setLastTripFinishedAt(LocalDateTime.now());
+        this.cab.setCurrentLocation(this.toLocation);
         this.status = Status.COMPLETED;
         this.endTS = LocalDateTime.now();
     }

@@ -30,9 +30,6 @@ public class TripsDao implements ITrips {
         if(!tripMap.containsKey(tripId))
             throw new TripNotExists();
         Trip trip = tripMap.get(tripId);
-        trip.getCab().setStatus(Cab.Status.IDLE);
-        trip.getCab().setLastTripFinishedAt(LocalDateTime.now());
-        trip.getCab().setCurrentLocation(trip.getToLocation());
         trip.endTrip();
     }
 
@@ -51,7 +48,6 @@ public class TripsDao implements ITrips {
     @Override
     public List<Trip> getTripsInfoByCabInInterval(@NonNull String cabNumber,@NonNull LocalDateTime fromTime,@NonNull LocalDateTime toTime){
         return tripMap.values().stream().filter(x->x.getCab().getNumber().equals(cabNumber)
-                                                && x.getStatus().equals(Trip.Status.COMPLETED)
                                                 && x.getStartTS().isAfter(fromTime) && x.getEndTS().isBefore(toTime))
                                                 .collect(Collectors.toList());
     }
