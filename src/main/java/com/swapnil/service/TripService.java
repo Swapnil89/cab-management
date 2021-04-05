@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @AllArgsConstructor
@@ -21,16 +22,22 @@ public class TripService {
     public Long getCabIdleTimeInInterval(@NonNull String cabNumber,@NonNull LocalDateTime fromTime,@NonNull LocalDateTime toTime){
         List<Trip> tripsInInterval =  trips.getTripsInfoByCabInInterval(cabNumber,fromTime,toTime);
         Long inTripTime = 0L;
-        LocalDateTime minStart = LocalDateTime.MAX;
-        LocalDateTime maxEnd = LocalDateTime.MIN;
         for(Trip current : tripsInInterval){
-            if(current.getStartTS().isBefore(minStart))
-                minStart = current.getStartTS();
-            if(current.getEndTS().isAfter(maxEnd))
-                maxEnd = current.getEndTS();
-            inTripTime += current.getEndTS().getSecond() - current.getStartTS().getSecond();
+            LocalDateTime start;
+            LocalDateTime end;
+            if(current.getStartTS().isBefore(fromTime))
+                start = fromTime;
+            else
+                start = current.getStartTS();
+            if(current.getEndTS().isAfter(toTime))
+                end = toTime;
+            else
+                end = toTime;
+            inTripTime += end.toInstant(ZoneOffset.UTC).toEpochMilli()-start.toInstant(ZoneOffset.UTC).toEpochMilli();
         }
-        return maxEnd.getSecond()-minStart.getSecond()-inTripTime;
+        return toTime.toInstant(ZoneOffset.UTC).toEpochMilli()
+                -fromTime.toInstant(ZoneOffset.UTC).toEpochMilli()
+                -inTripTime;
     }
 
     public City getCityWithHighestDemandInInterval(@NonNull LocalDateTime fromTime,@NonNull LocalDateTime toTime){

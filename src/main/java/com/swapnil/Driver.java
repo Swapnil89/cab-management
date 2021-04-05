@@ -38,8 +38,11 @@ public class Driver {
         System.out.println("Assigned CAB BLR->MUM : "+ bookedTrip1.getCab().getNumber());
         Trip bookedTrip2 = bookingService.book(cities.getCity("Banglore"),cities.getCity("Mumbai"));
         System.out.println("Assigned CAB BLR->MUM : "+ bookedTrip2.getCab().getNumber());
-        //bookingService.book(cities.getCity("Banglore"),cities.getCity("Mumbai"));
-
+        try {
+            bookingService.book(cities.getCity("Banglore"), cities.getCity("Mumbai"));
+        }catch (Exception e){
+            System.out.println("Exception : "+e.getLocalizedMessage());
+        }
         tripService.endTrip(bookedTrip2.getId());
         Thread.sleep(1000);
         tripService.endTrip(bookedTrip1.getId());
@@ -47,7 +50,10 @@ public class Driver {
         System.out.println("Assigned CAB MUM -> DEL : "+bookedTrip3.getCab().getNumber());
         tripService.endTrip(bookedTrip3.getId());
         System.out.println("Trip History for Cab KA12B1235 : "+tripService.getCabHistory("KA12B1235"));
-        System.out.println("Idle Time for Cab KA12B1235 (in seconds ) : " + tripService.getCabIdleTimeInInterval("KA12B1235", LocalDateTime.MIN, LocalDateTime.MAX));
+
+        LocalDateTime start = LocalDateTime.now().minusHours(1);
+        LocalDateTime end = LocalDateTime.now();
+        System.out.println("Idle Time for Cab KA12B1235 (in milli ) : " + tripService.getCabIdleTimeInInterval("KA12B1235", start, end));
         System.out.println("City with most demand : "+ tripService.getCityWithHighestDemandInInterval(LocalDateTime.MIN,LocalDateTime.MAX));
     }
 }

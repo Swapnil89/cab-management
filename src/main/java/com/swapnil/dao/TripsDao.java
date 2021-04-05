@@ -48,7 +48,8 @@ public class TripsDao implements ITrips {
     @Override
     public List<Trip> getTripsInfoByCabInInterval(@NonNull String cabNumber,@NonNull LocalDateTime fromTime,@NonNull LocalDateTime toTime){
         return tripMap.values().stream().filter(x->x.getCab().getNumber().equals(cabNumber)
-                                                && x.getStartTS().isAfter(fromTime) && x.getEndTS().isBefore(toTime))
+                                                && x.getStatus().equals(Trip.Status.COMPLETED)
+                                                && (x.getStartTS().isAfter(fromTime) || x.getEndTS().isBefore(toTime)))
                                                 .collect(Collectors.toList());
     }
 
